@@ -25,9 +25,9 @@ Note that you should specify your DB connection options (would be in separate fi
   <img src="https://i.imgur.com/U9554WZ.png" alt="Assignment's desirable ER-scheme">
 </p>
      
-### The state of working DB for 04.10.2022:
+### The state of working DB for 05.10.2022:
 <p align="center">
-  <img src="https://i.imgur.com/hgvTZvi.png" alt="Assignment's current ER-scheme">
+  <img src="[https://i.imgur.com/hgvTZvi.png](https://i.imgur.com/GA7xsgY.png)" alt="Assignment's current ER-scheme">
 </p>
      
      
