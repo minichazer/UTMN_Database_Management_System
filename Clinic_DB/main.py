@@ -2,39 +2,8 @@ import datetime
 import psycopg
 import random
 import time
-from secret import password
 import os
-
-
-# P - пациент, P - специалист, V - визит
-ENTITY_TYPES = ["P", "S", "V"]
-DB_ARGS = {
-    "dbname": "Clinic_DB",
-    "user": "postgres",
-    "password": password,
-    "host": "localhost",
-    "options": "-c search_path=main_schema",
-}
-
-R_DATA = {
-    "first_names": ["Олежа", "Ванёк", "Петька", "Антошка"],
-    "second_names": ["Олежкин", "Ванькин", "Петькин", "Антошкин"],
-    "patronymic": ["Амогусович", "Абобусович", "Кринжевич"],
-    "speciality": ["терапевт", "стоматолог", "хирург", "офтальмолог", "ортопед"],
-    "streets": [
-        "Ленина",
-        "Республики",
-        "Революции",
-        "Тихий проезд",
-        "Газовиков",
-        "Ю-Р.Г. Эрвье",
-        "Первомайская",
-        "Перекопская",
-        "Полевая",
-        "Широтная",
-        "Мельникайте",
-    ],
-}
+from constants import ENTITY_TYPES, DB_ARGS, R_DATA
 
 
 def get_current_timestamp() -> float:
@@ -94,7 +63,12 @@ def create_specialist(cursor, args: dict[str, str]) -> None:
     cursor.execute(query, args)
 
 
-def generate_entity(etype: str) -> dict[str, str]:
+def create_visit(cursor, args: dict[str, str]) -> None:
+    query = get_sql_content("create_visit.sql")
+    cursor.execute(query, args)
+
+
+def generate_entity(cursor, etype: str) -> dict[str, str]:
     if etype == "P":
         return {
             "patient_ID": generate_entity_ID("P"),
@@ -118,6 +92,30 @@ def generate_entity(etype: str) -> dict[str, str]:
             + "".join([str(random.randint(0, 9)) for i in range(9)]),
         }
 
+    if etype == "V":
+        patient_ID = (
+            'SELECT "patient_ID" FROM main_schema."Patient" ORDER BY random() limit 1;'
+        )
+        cursor.execute(patient_ID)
+        (patient_ID,) = cursor.fetchone()
+
+        specialist_ID = 'SELECT "specialist_ID" FROM main_schema."Specialist" ORDER BY random() limit 1;'
+        cursor.execute(specialist_ID)
+        (specialist_ID,) = cursor.fetchone()
+
+        return {
+            "patient_ID": patient_ID,  #
+            "specialist_ID": specialist_ID,
+            "is_first": random.choice([True, False]),
+            "case_ID": generate_entity_ID("V"),
+            "date": datetime.date.today().strftime("%d/%m/%Y"),
+            "anamnesis": "-",
+            "diagnosis": "-",
+            "treatment": "-",
+            "drugs_cost": 0,
+            "services_cost": random.randint(500, 1000),
+        }
+
 
 def populate(cursor, n: int) -> None:
     """
@@ -125,22 +123,23 @@ def populate(cursor, n: int) -> None:
     and INSESRT generation to DB.
     """
     for i in range(n):
-        patient = generate_entity("P")
+        patient = generate_entity(cursor, "P")
         create_patient(cursor, patient)
 
-        specialist = generate_entity("S")
+        specialist = generate_entity(cursor, "S")
         create_specialist(cursor, specialist)
 
-        # TODO: implement P-S connected visit and interface to its INSERT
+        visit = generate_entity(cursor, "V")
+        create_visit(cursor, visit)
 
 
 if __name__ == "__main__":
     with psycopg.connect(**DB_ARGS) as conn:
         with conn.cursor() as cur:
 
-            populate(cur, 10)
+            populate(cur, 2)
 
-            # TODO: 
+            # TODO:
             # implement choice menu for SQL queries
             # implement select/delete/update by keys
 
