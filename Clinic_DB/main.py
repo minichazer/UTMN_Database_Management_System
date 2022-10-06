@@ -30,12 +30,10 @@ def timestamps_difference(ts1: float, ts2: float) -> str:
 
 def generate_entity_ID(etype=random.choice(ENTITY_TYPES)) -> str:
     """
-    Creates an instance (string for now) of given type entity.
+    Generates ID for entity of given type in format 'TYPE-TIMESTAMP'.
     """
     ts_031022 = get_timestamp("03/10/2022")
     ts_today = get_current_timestamp()
-
-    # delay to not intersect the same timestamp
     time.sleep(0.000001)
 
     ID_date = timestamps_difference(ts_031022, ts_today)
@@ -53,19 +51,18 @@ def get_sql_content(filename: str) -> str:
     return content
 
 
-def create_patient(cursor, args: dict[str, str]) -> None:
-    query = get_sql_content("create_patient.sql")
-    cursor.execute(query, args)
+def create_entity(cursor, etype: str, args: dict[str, str]) -> None:
+    if etype == "P":
+        query = get_sql_content("create_patient.sql")
+        cursor.execute(query, args)
 
+    if etype == "S":
+        query = get_sql_content("create_specialist.sql")
+        cursor.execute(query, args)
 
-def create_specialist(cursor, args: dict[str, str]) -> None:
-    query = get_sql_content("create_specialist.sql")
-    cursor.execute(query, args)
-
-
-def create_visit(cursor, args: dict[str, str]) -> None:
-    query = get_sql_content("create_visit.sql")
-    cursor.execute(query, args)
+    if etype == "V":
+        query = get_sql_content("create_visit.sql")
+        cursor.execute(query, args)
 
 
 def generate_entity(cursor, etype: str) -> dict[str, str]:
@@ -93,9 +90,7 @@ def generate_entity(cursor, etype: str) -> dict[str, str]:
         }
 
     if etype == "V":
-        patient_ID = (
-            'SELECT "patient_ID" FROM main_schema."Patient" ORDER BY random() limit 1;'
-        )
+        patient_ID = 'SELECT "patient_ID" FROM main_schema."Patient" ORDER BY random() limit 1;'
         cursor.execute(patient_ID)
         (patient_ID,) = cursor.fetchone()
 
@@ -104,7 +99,7 @@ def generate_entity(cursor, etype: str) -> dict[str, str]:
         (specialist_ID,) = cursor.fetchone()
 
         return {
-            "patient_ID": patient_ID,  #
+            "patient_ID": patient_ID,
             "specialist_ID": specialist_ID,
             "is_first": random.choice([True, False]),
             "case_ID": generate_entity_ID("V"),
@@ -124,23 +119,46 @@ def populate(cursor, n: int) -> None:
     """
     for i in range(n):
         patient = generate_entity(cursor, "P")
-        create_patient(cursor, patient)
+        create_entity(cursor, "P", patient)
 
         specialist = generate_entity(cursor, "S")
-        create_specialist(cursor, specialist)
+        create_entity(cursor, "S", specialist)
 
         visit = generate_entity(cursor, "V")
-        create_visit(cursor, visit)
+        create_entity(cursor,"V", visit)
+
+
+def select_patient(cursor, patient_ID: str) -> tuple:
+    query = get_sql_content("select_patient.sql")
+    cursor.execute(query, {"patient_ID" : patient_ID})
+    return cursor.fetchone()
+
+
+def select_specialist(cursor, specialist_ID: str) -> tuple:
+    query = get_sql_content("select_specialist.sql")
+    cursor.execute(query, {"specialist_ID" : specialist_ID})
+    return cursor.fetchone()
+
+
+def select_visit(cursor, visit_ID: str) -> tuple:
+    query = get_sql_content("select_visit.sql")
+    cursor.execute(query, {"case_ID" : visit_ID})
+    return cursor.fetchone()
 
 
 if __name__ == "__main__":
     with psycopg.connect(**DB_ARGS) as conn:
         with conn.cursor() as cur:
 
-            populate(cur, 2)
+            # populate(cur, 10)
+
+            print(select_patient(cur, "P-247900-617"))
+            print(select_specialist(cur, "S-238515-688"))
+            print(select_visit(cur, "V-247900-695"))
 
             # TODO:
             # implement choice menu for SQL queries
             # implement select/delete/update by keys
+            # compaer speed of named params and pre-formatted query (with args)
 
             conn.commit()
