@@ -1,5 +1,5 @@
-import datetime
-import psycopg
+import datetime as dt
+import psycopg as pg
 import random
 import time
 import os
@@ -10,14 +10,14 @@ def get_current_timestamp() -> float:
     """
     Returns current date's timestamp.
     """
-    return datetime.datetime.now().timestamp()
+    return dt.datetime.now().timestamp()
 
 
 def get_timestamp(date: str) -> float:
     """
     Returns date's timestamp.
     """
-    return time.mktime(datetime.datetime.strptime(date, "%d/%m/%Y").timetuple())
+    return time.mktime(dt.datetime.strptime(date, "%d/%m/%Y").timetuple())
 
 
 def timestamps_difference(ts1: float, ts2: float) -> str:
@@ -51,21 +51,18 @@ def get_sql_content(filename: str) -> str:
     return content
 
 
-def create_entity(cursor, etype: str, args: dict[str, str]) -> None:
-    if etype == "P":
-        query = get_sql_content("create_patient.sql")
-        cursor.execute(query, args)
-
-    if etype == "S":
-        query = get_sql_content("create_specialist.sql")
-        cursor.execute(query, args)
-
-    if etype == "V":
-        query = get_sql_content("create_visit.sql")
-        cursor.execute(query, args)
+def create_entity(cursor: pg.cursor, entity_name: str, args: dict[str, str]) -> None:
+    """
+    Create a new row of entity type in its named table.
+    """
+    query = get_sql_content(f"create_{entity_name}.sql")
+    cursor.execute(query, args)
 
 
-def generate_entity(cursor, etype: str) -> dict[str, str]:
+def generate_entity(cursor: pg.cursor, etype: str) -> dict[str, str]:
+    """
+    Randomly generates data for an entity of given type.
+    """
     if etype == "P":
         return {
             "patient_ID": generate_entity_ID("P"),
@@ -103,7 +100,7 @@ def generate_entity(cursor, etype: str) -> dict[str, str]:
             "specialist_ID": specialist_ID,
             "is_first": random.choice([True, False]),
             "case_ID": generate_entity_ID("V"),
-            "date": datetime.date.today().strftime("%d/%m/%Y"),
+            "date": dt.date.today().strftime("%d/%m/%Y"),
             "anamnesis": "-",
             "diagnosis": "-",
             "treatment": "-",
@@ -112,53 +109,65 @@ def generate_entity(cursor, etype: str) -> dict[str, str]:
         }
 
 
-def populate(cursor, n: int) -> None:
+def populate(cursor: pg.cursor, n: int) -> None:
     """
     Creates random N entities (patient, specialist, todo: visits)
     and INSESRT generation to DB.
     """
     for i in range(n):
         patient = generate_entity(cursor, "P")
-        create_entity(cursor, "P", patient)
+        create_entity(cursor, "patient", patient)
 
         specialist = generate_entity(cursor, "S")
-        create_entity(cursor, "S", specialist)
+        create_entity(cursor, "specialist", specialist)
 
         visit = generate_entity(cursor, "V")
-        create_entity(cursor,"V", visit)
+        create_entity(cursor, "visit", visit)
 
 
-def select_patient(cursor, patient_ID: str) -> tuple:
-    query = get_sql_content("select_patient.sql")
-    cursor.execute(query, {"patient_ID" : patient_ID})
+def select_row(cursor: pg.cursor, table_name: str, eID: str) -> tuple:
+    query = get_sql_content(f"select_{table_name}.sql")
+    cursor.execute(query, {f"{table_name}_ID": eID})
     return cursor.fetchone()
 
 
-def select_specialist(cursor, specialist_ID: str) -> tuple:
-    query = get_sql_content("select_specialist.sql")
-    cursor.execute(query, {"specialist_ID" : specialist_ID})
-    return cursor.fetchone()
+def select_allrows(cursor: pg.cursor, table_name: str) -> list[tuple]:
+    query = get_sql_content(f"select_table_{table_name}.sql")
+    cursor.execute(query)
+    return cursor.fetchall()
 
 
-def select_visit(cursor, visit_ID: str) -> tuple:
-    query = get_sql_content("select_visit.sql")
-    cursor.execute(query, {"case_ID" : visit_ID})
-    return cursor.fetchone()
+def delete_row(cursor: pg.cursor, table_name: str, eID: str) -> str:
+    query = get_sql_content(f"delete_{table_name}.sql")
+    cursor.execute(query, {f"{table_name}_ID": eID})
+    return f"Rows affected: {cursor.rowcount}"
+
+
+def clear_tables(cursor: pg.cursor) -> None:
+    """
+    Renew the schema by deleting all rows in all tables.
+    """
+    query = get_sql_content("clear_tables.sql")
+    cursor.execute(query)
+    return f"Rows affected: {cursor.rowcount}"
 
 
 if __name__ == "__main__":
-    with psycopg.connect(**DB_ARGS) as conn:
+    with pg.connect(**DB_ARGS) as conn:
         with conn.cursor() as cur:
 
-            # populate(cur, 10)
+            # populate(cur, 2)
 
-            print(select_patient(cur, "P-247900-617"))
-            print(select_specialist(cur, "S-238515-688"))
-            print(select_visit(cur, "V-247900-695"))
+            # print(select_patient(cur, "P-247900-617"))
+            # print(select_specialist(cur, "S-238515-688"))
+            # print(select_visit(cur, "V-247900-695"))
+
+            print(select_row(cur, "patient", "P-247900-617"))
+            print(delete_row(cur, "patient", "1"))
+            # print(select_allrows(cur, "visit"))
 
             # TODO:
             # implement choice menu for SQL queries
-            # implement select/delete/update by keys
-            # compaer speed of named params and pre-formatted query (with args)
+            # compare speed of named params and pre-formatted query (with args)
 
             conn.commit()

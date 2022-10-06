@@ -1,0 +1,1 @@
+TRUNCATE "Patient", "Specialist", "Visit" CASCADE;
