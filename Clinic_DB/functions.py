@@ -3,8 +3,7 @@ import psycopg as pg
 import random
 import time
 import os
-from constants import ENTITY_TYPES, DB_ARGS, R_DATA
-
+from constants import ENTITY_TYPES, R_DATA
 
 def get_current_timestamp() -> float:
     """
@@ -32,11 +31,11 @@ def generate_entity_ID(etype=random.choice(ENTITY_TYPES)) -> str:
     """
     Generates ID for entity of given type in format 'TYPE-TIMESTAMP'.
     """
-    ts_031022 = get_timestamp("03/10/2022")
+    ts_011122 = get_timestamp("01/11/2022")
     ts_today = get_current_timestamp()
     time.sleep(0.000001)
 
-    ID_date = timestamps_difference(ts_031022, ts_today)
+    ID_date = timestamps_difference(ts_011122, ts_today)
     ID_entity_type = etype
     return f"{ID_entity_type}-{ID_date}"
 
@@ -60,6 +59,7 @@ def create_entity(cursor: pg.cursor, entity_name: str, args: dict[str, str]) -> 
 
 
 def generate_entity(cursor: pg.cursor, etype: str) -> dict[str, str]:
+    # TODO: implement Medicine type generation
     """
     Randomly generates data for an entity of given type.
     """
@@ -111,7 +111,7 @@ def generate_entity(cursor: pg.cursor, etype: str) -> dict[str, str]:
 
 def populate(cursor: pg.cursor, n: int) -> None:
     """
-    Creates random N entities (patient, specialist, todo: visits)
+    Creates random N entities (patient, specialist, visits)
     and INSESRT generation to DB.
     """
     for i in range(n):
@@ -131,12 +131,6 @@ def select_row(cursor: pg.cursor, table_name: str, eID: str) -> tuple:
     return cursor.fetchone()
 
 
-def select_allrows(cursor: pg.cursor, table_name: str) -> list[tuple]:
-    query = get_sql_content(f"select_table_{table_name}.sql")
-    cursor.execute(query)
-    return cursor.fetchall()
-
-
 def delete_row(cursor: pg.cursor, table_name: str, eID: str) -> str:
     query = get_sql_content(f"delete_{table_name}.sql")
     cursor.execute(query, {f"{table_name}_ID": eID})
@@ -150,24 +144,3 @@ def clear_tables(cursor: pg.cursor) -> None:
     query = get_sql_content("clear_tables.sql")
     cursor.execute(query)
     return f"Rows affected: {cursor.rowcount}"
-
-
-if __name__ == "__main__":
-    with pg.connect(**DB_ARGS) as conn:
-        with conn.cursor() as cur:
-
-            # populate(cur, 2)
-
-            # print(select_patient(cur, "P-247900-617"))
-            # print(select_specialist(cur, "S-238515-688"))
-            # print(select_visit(cur, "V-247900-695"))
-
-            print(select_row(cur, "patient", "P-247900-617"))
-            print(delete_row(cur, "patient", "1"))
-            # print(select_allrows(cur, "visit"))
-
-            # TODO:
-            # implement choice menu for SQL queries
-            # compare speed of named params and pre-formatted query (with args)
-
-            conn.commit()

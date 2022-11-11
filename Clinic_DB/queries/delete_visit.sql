@@ -1,3 +1,3 @@
 DELETE
 FROM "Visit"
-WHERE "case_ID" LIKE %(visit_ID)s;
+WHERE "visit_ID" LIKE %(visit_ID)s;

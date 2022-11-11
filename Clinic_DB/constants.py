@@ -1,14 +1,5 @@
 # P - пациент, P - специалист, V - визит
-from secret import password
-
 ENTITY_TYPES = ["P", "S", "V"]
-DB_ARGS = {
-    "dbname": "Clinic_DB",
-    "user": "postgres",
-    "password": password,
-    "host": "localhost",
-    "options": "-c search_path=main_schema",
-}
 
 R_DATA = {
     "first_names": ["Олежа", "Ванёк", "Петька", "Антошка"],
