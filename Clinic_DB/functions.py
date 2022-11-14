@@ -123,24 +123,3 @@ def populate(cursor: pg.cursor, n: int) -> None:
 
         visit = generate_entity(cursor, "V")
         create_entity(cursor, "visit", visit)
-
-
-def select_row(cursor: pg.cursor, table_name: str, eID: str) -> tuple:
-    query = get_sql_content(f"select_{table_name}.sql")
-    cursor.execute(query, {f"{table_name}_ID": eID})
-    return cursor.fetchone()
-
-
-def delete_row(cursor: pg.cursor, table_name: str, eID: str) -> str:
-    query = get_sql_content(f"delete_{table_name}.sql")
-    cursor.execute(query, {f"{table_name}_ID": eID})
-    return f"Rows affected: {cursor.rowcount}"
-
-
-def clear_tables(cursor: pg.cursor) -> None:
-    """
-    Renew the schema by deleting all rows in all tables.
-    """
-    query = get_sql_content("clear_tables.sql")
-    cursor.execute(query)
-    return f"Rows affected: {cursor.rowcount}"
