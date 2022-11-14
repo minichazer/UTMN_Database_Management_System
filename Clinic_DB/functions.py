@@ -44,7 +44,7 @@ def get_sql_content(filename: str) -> str:
     """
     Parses the given filename and returns the content of file.
     """
-    path = f"{os.getcwd()}\\Clinic_DB\\queries\\"
+    path = f"{os.getcwd()}\\queries\\"
     with open(path + filename, "r") as f:
         content = f.read()
     return content
@@ -59,10 +59,16 @@ def create_entity(cursor: pg.cursor, entity_name: str, args: dict[str, str]) -> 
 
 
 def generate_entity(cursor: pg.cursor, etype: str) -> dict[str, str]:
-    # TODO: implement Medicine type generation
     """
     Randomly generates data for an entity of given type.
     """
+    if etype == "M":
+        return {
+            "medicine_ID": generate_entity_ID("M"),
+            "name": random.choice(R_DATA["med_names"]) + "-" + str(random.randint(2, 10)),
+            "cost": random.randint(100, 1500),
+        }
+
     if etype == "P":
         return {
             "patient_ID": generate_entity_ID("P"),
@@ -99,7 +105,7 @@ def generate_entity(cursor: pg.cursor, etype: str) -> dict[str, str]:
             "patient_ID": patient_ID,
             "specialist_ID": specialist_ID,
             "is_first": random.choice([True, False]),
-            "case_ID": generate_entity_ID("V"),
+            "visit_ID": generate_entity_ID("V"),
             "date": dt.date.today().strftime("%d/%m/%Y"),
             "anamnesis": "-",
             "diagnosis": "-",
@@ -111,10 +117,13 @@ def generate_entity(cursor: pg.cursor, etype: str) -> dict[str, str]:
 
 def populate(cursor: pg.cursor, n: int) -> None:
     """
-    Creates random N entities (patient, specialist, visits)
+    Creates random N entities (patient, specialist, visits, medicines)
     and INSESRT generation to DB.
     """
     for i in range(n):
+        medicine = generate_entity(cursor, "M")
+        create_entity(cursor, "medicine", medicine)
+
         patient = generate_entity(cursor, "P")
         create_entity(cursor, "patient", patient)
 

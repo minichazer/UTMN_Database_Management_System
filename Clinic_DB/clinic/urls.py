@@ -20,4 +20,5 @@ from clinicapp import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("add/patient", views.add_patient),
+    path("populatedb", views.populatedb)
 ]
