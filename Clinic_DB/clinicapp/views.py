@@ -15,7 +15,7 @@ def add_patient(request):
         patientform = PatientForm(request.POST)
         if patientform.is_valid():
             patient = Patient()
-            patient.patient_id = generate_entity_ID("P")    # request.POST.get("patient_id")
+            patient.patient_id = generate_entity_ID("P")
             patient.first_name = request.POST.get("first_name")
             patient.second_name = request.POST.get("second_name")
             patient.patronymic = request.POST.get("patronymic")
