@@ -5,6 +5,7 @@ import time
 import os
 from constants import ENTITY_TYPES, R_DATA
 
+
 def get_current_timestamp() -> float:
     """
     Returns current date's timestamp.
@@ -44,7 +45,7 @@ def get_sql_content(filename: str) -> str:
     """
     Parses the given filename and returns the content of file.
     """
-    path = f"{os.getcwd()}\\queries\\"
+    path = f"{os.getcwd()}/queries/"
     with open(path + filename, "r") as f:
         content = f.read()
     return content
@@ -65,7 +66,9 @@ def generate_entity(cursor: pg.cursor, etype: str) -> dict[str, str]:
     if etype == "M":
         return {
             "medicine_ID": generate_entity_ID("M"),
-            "name": random.choice(R_DATA["med_names"]) + "-" + str(random.randint(2, 10)),
+            "name": random.choice(R_DATA["med_names"])
+            + "-"
+            + str(random.randint(2, 10)),
             "cost": random.randint(100, 1500),
         }
 
@@ -93,7 +96,9 @@ def generate_entity(cursor: pg.cursor, etype: str) -> dict[str, str]:
         }
 
     if etype == "V":
-        patient_ID = 'SELECT "patient_ID" FROM main_schema."Patient" ORDER BY random() limit 1;'
+        patient_ID = (
+            'SELECT "patient_ID" FROM main_schema."Patient" ORDER BY random() limit 1;'
+        )
         cursor.execute(patient_ID)
         (patient_ID,) = cursor.fetchone()
 
@@ -106,7 +111,7 @@ def generate_entity(cursor: pg.cursor, etype: str) -> dict[str, str]:
             "specialist_ID": specialist_ID,
             "is_first": random.choice([True, False]),
             "visit_ID": generate_entity_ID("V"),
-            "date": dt.date.today().strftime("%d/%m/%Y"),
+            "date": dt.date.today().strftime("%Y-%m-%d"),
             "anamnesis": "-",
             "diagnosis": "-",
             "treatment": "-",

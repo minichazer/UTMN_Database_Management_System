@@ -1,11 +1,9 @@
-from email.policy import default
 from django.http import HttpResponse, HttpRequest
-from telnetlib import STATUS
 from django.shortcuts import render
 from .forms import PatientForm
-from .models import Patient, Visit, VisitMedicine, Specialist
+from .models import Patient
 import psycopg as pg
-from clinic.settings import DB_ARGS
+from app.clinic.settings import DB_ARGS
 from functions import generate_entity_ID, populate
 
 
@@ -32,12 +30,13 @@ def add_patient(request: HttpRequest):
 
     return render(request, "Patient.html", {"form": patientform})
 
+
 def populatedb(request: HttpRequest):
     if request.method == "GET":
         with pg.connect(**DB_ARGS) as conn:
-                with conn.cursor() as cur:
-                    populate(cur, 10)
-                    print("ALO")
-                    return HttpResponse("200")
-    
+            with conn.cursor() as cur:
+                populate(cur, 10)
+                print("ALO")
+                return HttpResponse("200")
+
     return render(request, "Populatedb.html")

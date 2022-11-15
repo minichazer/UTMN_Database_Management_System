@@ -1,6 +1,4 @@
 from django import forms
-from functions import generate_entity_ID
-import uuid
 
 
 class PatientForm(forms.Form):
@@ -13,6 +11,7 @@ class PatientForm(forms.Form):
     home_address = forms.CharField()
     phone_number = forms.CharField()
 
+
 class SpecialistForm(forms.Form):
     # specialist_id = forms.CharField(initial=uuid.uuid4, widget=forms.TextInput(attrs={"readonly": "readonly"}))
 
@@ -23,11 +22,12 @@ class SpecialistForm(forms.Form):
     home_address = forms.CharField()
     phone_number = forms.CharField()
 
+
 class VisitForm(forms.Form):
     # patient_id = forms.CharField(initial=uuid.uuid4, widget=forms.TextInput(attrs={"readonly": "readonly"}))
     # specialist_id = forms.CharField(initial=uuid.uuid4, widget=forms.TextInput(attrs={"readonly": "readonly"}))
     # visit_ID = forms.CharField(initial=uuid.uuid4, widget=forms.TextInput(attrs={"readonly": "readonly"}))
-    is_first = forms.CharField() # true / false
+    is_first = forms.CharField()  # true / false
     date = forms.CharField()
     anamnesis = forms.CharField()
     diagnosis = forms.CharField()

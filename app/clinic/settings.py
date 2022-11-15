@@ -1,5 +1,5 @@
 from pathlib import Path
-from clinic.password import password
+from app.clinic.credentials import DB_password, DB_username
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -17,7 +17,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 GRAPHENE = {
-  "SCHEMA": "clinicapp.schema.schema",
+    "SCHEMA": "app.clinicapp.schema.schema",
 }
 
 # Application definition
@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "clinicapp",
+    "app.clinicapp",
     "graphene_django",
 ]
 
@@ -43,7 +43,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "clinic.urls"
+ROOT_URLCONF = "app.clinic.urls"
 
 TEMPLATES = [
     {
@@ -61,7 +61,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "clinic.wsgi.application"
+WSGI_APPLICATION = "app.clinic.wsgi.application"
 
 
 # Database
@@ -75,9 +75,9 @@ DATABASES = {
 
 
 DB_ARGS = {
-    "dbname": "Clinic_DB",
-    "user": "postgres",
-    "password": password,
+    "dbname": "postgres",
+    "user": DB_username,
+    "password": DB_password,
     "host": "localhost",
     "options": "-c search_path=main_schema",
 }
