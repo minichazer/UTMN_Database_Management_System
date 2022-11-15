@@ -31,12 +31,11 @@ def add_patient(request: HttpRequest):
     return render(request, "Patient.html", {"form": patientform})
 
 
-def populatedb(request: HttpRequest):
+def populatedb(request: HttpRequest, count: int):
     if request.method == "GET":
         with pg.connect(**DB_ARGS) as conn:
             with conn.cursor() as cur:
-                populate(cur, 10)
-                print("ALO")
+                populate(cur, count)
                 return HttpResponse("200")
 
     return render(request, "Populatedb.html")
