@@ -124,7 +124,7 @@ def generate_entity(cursor: pg.cursor, etype: str) -> dict[str, str]:
 def populate(cursor: pg.cursor, n: int) -> None:
     """
     Creates random N entities (patient, specialist, visits, medicines)
-    and INSESRT generation to DB.
+    and INSERT generation to DB.
     """
     for i in range(n):
         medicine = generate_entity(cursor, "M")
