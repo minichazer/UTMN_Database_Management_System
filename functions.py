@@ -1,4 +1,5 @@
 import datetime as dt
+from datetime import timezone
 import psycopg as pg
 import random
 import time
@@ -68,7 +69,7 @@ def generate_entity(cursor: pg.cursor, etype: str) -> dict[str, str]:
             "medicine_ID": generate_entity_ID("M"),
             "name": random.choice(R_DATA["med_names"])
             + "-"
-            + str(random.randint(2, 10)),
+            + str(random.randint(2, 100)),
             "cost": random.randint(100, 1500),
         }
 
@@ -111,7 +112,7 @@ def generate_entity(cursor: pg.cursor, etype: str) -> dict[str, str]:
             "specialist_ID": specialist_ID,
             "is_first": random.choice([True, False]),
             "visit_ID": generate_entity_ID("V"),
-            "date": dt.date.today().strftime("%Y-%m-%d"),
+            "date": dt.datetime.now(timezone.utc),
             "anamnesis": "-",
             "diagnosis": "-",
             "treatment": "-",
@@ -137,3 +138,18 @@ def populate(cursor: pg.cursor, n: int) -> None:
 
         visit = generate_entity(cursor, "V")
         create_entity(cursor, "visit", visit)
+
+        # TODO: make a function to create Visit_Medicine row
+        for j in range(1, random.randint(2, 4)):
+
+            rand_medicine = cursor.execute(
+                'SELECT "medicine_ID" FROM "Medicine" ORDER BY random() LIMIT 1;'
+            )
+            (rm,) = cursor.fetchone()
+
+            visit_medicine = cursor.execute(
+                'INSERT INTO "Visit_Medicine"("visit_ID", "medicine_ID") VALUES (%(lv)s, %(rm)s);',
+                {"lv": visit["visit_ID"], "rm": rm},
+            )
+
+        # print(visit["visit_ID"], rm)

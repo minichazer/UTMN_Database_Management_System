@@ -1,5 +1,5 @@
 from pathlib import Path
-from app.clinic.credentials import DB_password, DB_username
+from app.clinic.credentials import DB_name, DB_password, DB_username
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -75,7 +75,7 @@ DATABASES = {
 
 
 DB_ARGS = {
-    "dbname": "postgres",
+    "dbname": DB_name,
     "user": DB_username,
     "password": DB_password,
     "host": "localhost",

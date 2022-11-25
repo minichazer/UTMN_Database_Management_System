@@ -31,6 +31,9 @@ def add_patient(request: HttpRequest):
     return render(request, "Patient.html", {"form": patientform})
 
 
+# TODO: make function to clear all tables in DB
+
+
 def populatedb(request: HttpRequest, count: int):
     if request.method == "GET":
         with pg.connect(**DB_ARGS) as conn:
