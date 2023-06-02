@@ -2,3 +2,4 @@ __pycache__
 venv
 .idea
 app/clinic/credentials.py
+app/clinic/db_args.py

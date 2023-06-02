@@ -1,5 +1,7 @@
 from pathlib import Path
 from app.clinic.credentials import DB_name, DB_password, DB_username
+import os
+from app.clinic.db_args import DB_NAME, DB_PASS, DB_USER, MG_PASS, MG_NAME, MG_USER, MG_HOST, MG_AUTHSOURCE, MG_AUTHMECHANISM
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,9 +14,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-0snb6grt0d1)ld)h5vfe5*twgu0%b$ymyk(u%lu8o_x4@f)oir"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 GRAPHENE = {
     "SCHEMA": "app.clinicapp.schema.schema",
@@ -31,10 +33,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "app.clinicapp",
     "graphene_django",
+    'djongo',
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -48,7 +52,7 @@ ROOT_URLCONF = "app.clinic.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, 'clinicapp/templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -70,6 +74,22 @@ WSGI_APPLICATION = "app.clinic.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
+        "NAME": DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASS,
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    },
+    'mongodb_def': {
+        'ENGINE': 'djongo',
+        'NAME': MG_NAME,
+        'CLIENT': {
+            'host': MG_HOST,
+            'username': MG_USER,
+            'password': MG_PASS,
+            'authSource': MG_AUTHSOURCE,
+            'authMechanism': MG_AUTHMECHANISM
+        }
     }
 }
 
@@ -101,6 +121,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher"
+]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
@@ -118,6 +146,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'clinicapp/static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

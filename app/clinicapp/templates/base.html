@@ -1,0 +1,58 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Base Page</title>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+
+<body>
+<div class="background-wrapper">
+
+
+    <div class="navigation">
+        <div class="base-logo">
+            <img src="../static/images/logo.svg">
+        </div>
+        <div class="base-logoname">
+            <p>Тюменская Городская Поликлиника</p>
+        </div>
+        <div class="base-nav-line"></div>
+        <div class="base-nav-button" onclick='location.href="/profile";'>Личный кабинет</div>
+        <div class="base-nav-line"></div>
+        <div class="base-nav-button" onclick='location.href="/schedule";'>Расписание</div>
+        <div class="base-nav-line"></div>
+        <div class="base-nav-button" onclick='location.href="/patients";'>Пациенты</div>
+        <div class="base-nav-line"></div>
+        <div class="base-nav-button" onclick='location.href="/logout";'>Выход</div>
+    </div>
+
+    <div class="main">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <div class="footer">
+        <div class="base-foo-block">
+            <span>Проблемы с сайтом?
+            Телефон технической поддержки:
+            +7 (922) 14-88-322</span>
+        </div>
+        <div class="base-foo-block">
+            <span>Наш телеграм канал:
+                t.me/tumgorpol1</span>
+        </div>
+        <div class="base-foo-block">
+            <span>Группа ВКонтакте:
+                vk.com/group/tumgorpol1</span>
+        </div>
+    </div>
+
+</div>
+</body>
+
+
+</html>

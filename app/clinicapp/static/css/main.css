@@ -1,0 +1,373 @@
+html * {
+    font-family: "Montserrat";
+}
+
+@font-face {
+    font-family: "Montserrat";
+    src: url(../fonts/Montserrat-Regular.ttf) format("truetype");
+    font-weight: normal;
+    font-display: fallback;
+}
+
+
+body {
+    background-color: rgba(211, 255, 247, 1);
+    background-position: right;
+    background-repeat: repeat;
+}
+
+.background-wrapper:before {
+    content: "";
+    background: url("../images/PATTERN-compressed.png");
+    opacity: 0.2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+.main {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    height: 110px;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: #1D766F;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    height: 110px;
+    width: 100%;
+    text-align: center;
+    bottom: 0;
+    left: 0;
+    background: #1D766F;
+}
+
+.login-form {
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    background-color: #b3f5ed;
+    top: 150px;
+    left: calc(50% - 210px);
+    height: 550px;
+    width: 420px;
+    box-sizing: border-box;
+    border: 1px solid #C3FBF7;
+    border-radius: 48px;
+}
+
+.login-logoname {
+    height: 180px;
+    display: flex;
+}
+
+.login-logo {
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    filter: invert(34%) sepia(100%) saturate(262%) hue-rotate(123deg) brightness(87%) contrast(85%);
+}
+
+.login-companyname {
+    color: #2d6f67;
+    font-size: 26px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    flex: 1;
+    white-space: pre-wrap;
+}
+
+.nf-404 {
+    color: #2d6f67;
+    font-size: 26px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    white-space: pre-wrap;
+}
+
+.login-credentials form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.login-credentials h2 {
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 36px;
+    color: #1D766F;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 310px;
+    height: 40px;
+    padding: 5px;
+    margin-bottom: 6px;
+    border: 1px solid #ccc;
+    background: rgba(255, 255, 255, 0.91);
+    border-radius: 47px;
+}
+
+input[type="submit"] {
+    margin-top: 20px;
+
+    background: #1D766F;
+    border-radius: 73px;
+    width: 310px;
+    height: 65px;
+
+    font-style: italic;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 36px;
+
+    color: #FFFFFF;
+    border: 1px solid #ccc;
+}
+
+.login-form .line {
+    margin-top: 3px;
+    margin-bottom: 3px;
+    height: 1px;
+    width: 310px;
+    background-color: #1D766F;
+    border-radius: 10px;
+}
+
+.base-logo img {
+    height: 90px;
+    filter: grayscale(100%) brightness(200%);
+}
+
+.base-logoname {
+    color: #e0e0e0;
+    width: 200px;
+    font-size: 26px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    white-space: pre-wrap;
+}
+
+.base-nav-button {
+    width: 300px;
+    height: 60px;
+    color: #e0e0e0;
+    font-size: 26px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.base-nav-button:hover {
+    color: #1D766F;
+    background: rgba(255, 255, 255, 0.91);
+    border-radius: 47px;
+}
+
+.base-nav-line {
+    height: 85px;
+    width: 1px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+}
+
+.base-foo-block {
+    white-space: pre-line;
+    text-align: left;
+    width: 500px;
+    height: 100px;
+    color: #e0e0e0;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-content {
+    margin-top: 125px;
+    width: 600px;
+    height: 700px;
+    border-radius: 77px;
+    background: #B3F5ED;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.profile-content .avatar-img {
+    width: 275px;
+    height: 275px;
+    background: #FFFFFF;
+    border-radius: 205px;
+    background-image: url("https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/51Rq9uHd59L._AC_UF1000,1000_QL80_.jpg");
+    background-size: 275px;
+}
+
+
+.avatar p {
+    font-size: 14px;
+    color: rgba(128, 128, 128, 0.85);
+    text-align: center;
+}
+
+.profile-content .info-field{
+    width: 400px;
+    height: 40px;
+    padding: 5px 0px 0px 15px;
+    margin-bottom: 6px;
+    border: 1px solid #ccc;
+    background: rgba(255, 255, 255, 0.91);
+    border-radius: 47px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-style: italic;
+    font-size: 16px;
+}
+
+.schedule-title {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    font-weight: bold;
+}
+
+.schedule-title p {
+    color: #2d6f67;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.schedule-content {
+    margin-top: 125px;
+    width: 700px;
+    height: 700px;
+    border-radius: 77px;
+    background: #B3F5ED;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.schedule-pat-list {
+    width: 100%;
+    height: 100%;
+}
+
+.schedule-calendar {
+    width: 80%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 54px;
+    background: rgba(255, 255, 255, 0.91);
+}
+
+.schedule-calendar-row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    margin-top: 65px;
+}
+
+.schedule-date-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    width: 75px;
+    height: 75px;
+    color: #2d6f67;
+    font-weight: bolder;
+}
+
+.schedule-date-button:hover {
+    color: #e0e0e0;
+    background: #1D766F;
+    border-radius: 47px;
+}
+
+.schedule-pat-list {
+    width: 100%;
+    height: 80%;
+}
+
+.schedule-pat-list-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 35px;
+}
+
+.schedule-pat-list-date {
+    margin-left: 25px;
+    margin-right: 45px;
+    width: 130px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.91);
+    border-radius: 54px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    color: #2d6f67;
+}
+
+.schedule-pat-list-patient {
+    height: 60px;
+    margin-right: 25px;
+    width: 425px;
+    background: rgba(255, 255, 255, 0.91);
+    border-radius: 54px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    color: #2d6f67;
+}
+
+

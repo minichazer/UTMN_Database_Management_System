@@ -1,0 +1,43 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Base Page</title>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+
+<body>
+<div class="background-wrapper">
+    <div class="main">
+        <div class="login-form">
+            <div class="login-logoname">
+                <div class="login-logo">
+                    <img src="../static/images/logo.svg">
+                </div>
+                <div class="login-companyname">
+                    <p>Тюменская Городская Поликлиника</p>
+                </div>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="login-credentials">
+                <form method="post" autocomplete="off">
+                    {% csrf_token %}
+                    <h2>Добро пожаловать!</h2>
+                    <input type="text" id="unfield" name="username" required value="Логин"><br>
+                    <input type="password" id="passfield" name="password" required value="Пароль"><br>
+                    <input type="submit" value="Войти">
+                    {% if error %}
+                        <p>{{ error }}</p>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

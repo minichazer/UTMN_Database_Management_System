@@ -33,13 +33,13 @@ def generate_entity_ID(etype=random.choice(ENTITY_TYPES)) -> str:
     """
     Generates ID for entity of given type in format 'TYPE-TIMESTAMP'.
     """
-    ts_011122 = get_timestamp("01/11/2022")
+    ts_011222 = get_timestamp("01/06/2023")
     ts_today = get_current_timestamp()
     time.sleep(0.000001)
 
-    ID_date = timestamps_difference(ts_011122, ts_today)
-    ID_entity_type = etype
-    return f"{ID_entity_type}-{ID_date}"
+    date_ID = timestamps_difference(ts_011222, ts_today)
+    entity_type_ID = etype
+    return f"{entity_type_ID}-{date_ID}"
 
 
 def get_sql_content(filename: str) -> str:
@@ -121,14 +121,20 @@ def generate_entity(cursor: pg.cursor, etype: str) -> dict[str, str]:
         }
 
 
+def populate_medicines(cursor: pg.cursor, n: int) -> None:
+    for i in range(n):
+        medicine = generate_entity(cursor, "M")
+        create_entity(cursor, "medicine", medicine)
+
+
+
+
 def populate(cursor: pg.cursor, n: int) -> None:
     """
     Creates random N entities (patient, specialist, visits, medicines)
     and INSERT generation to DB.
     """
     for i in range(n):
-        medicine = generate_entity(cursor, "M")
-        create_entity(cursor, "medicine", medicine)
 
         patient = generate_entity(cursor, "P")
         create_entity(cursor, "patient", patient)
@@ -140,6 +146,7 @@ def populate(cursor: pg.cursor, n: int) -> None:
         create_entity(cursor, "visit", visit)
 
         # TODO: make a function to create Visit_Medicine row
+
         for j in range(1, random.randint(2, 4)):
 
             rand_medicine = cursor.execute(
@@ -153,3 +160,11 @@ def populate(cursor: pg.cursor, n: int) -> None:
             )
 
         # print(visit["visit_ID"], rm)
+
+
+
+
+        # stats for Medicines usage and cost / services cost
+
+        # получаю список лекарств
+        # по циклу иду по лекарствам и смотрю

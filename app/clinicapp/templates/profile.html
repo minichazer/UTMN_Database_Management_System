@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="profile-content">
+        <div class="avatar">
+            <div class="avatar-img"></div>
+            <p>id: {{ profile.specialist_id }}</p>
+        </div>
+        <div class="info-field">ФИО: {{ profile.first_name }} {{ profile.second_name }} </div>
+        <div class="info-field">Телефон: {{ profile.phone_number }}</div>
+        <div class="info-field">Адрес: {{ profile.home_address }}</div>
+        <div class="info-field">Специальность: {{ profile.speciality }}</div>
+    </div>
+{% endblock %}
+
